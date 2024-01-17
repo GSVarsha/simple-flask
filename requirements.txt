@@ -2,3 +2,5 @@ Flask
 uwsgi
 requests
 numpy
+git+https://github.com/pvital/python-sensor.git@main
+setuptools
