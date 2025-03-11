@@ -1,21 +1,7 @@
-import time
-from functools import wraps
-
-from flask import Flask, Response
+import requests
+from flask import Flask
 
 app = Flask(__name__)
-
-
-def log_elapsed_time_decorator(func):
-    @wraps(func)
-    def timeit_wrapper(*args, **kwargs):
-        start_time = time.perf_counter()
-        result = func(*args, **kwargs)
-        total_time = time.perf_counter() - start_time
-        print(f"Function {func.__name__}{args} {kwargs} Took {total_time:.4f} seconds")
-        return result
-
-    return timeit_wrapper
 
 
 @app.get("/")
@@ -23,16 +9,29 @@ def hello():
     return {"message": "Hello from Instana (profiling) World"}
 
 
-@app.route("/dummy", methods=["POST", "GET"], endpoint="dummy")
-@log_elapsed_time_decorator
-def dummy():
-    import numpy as np
+@app.route("/users/")
+def read_users():
+    resp = requests.get("https://reqres.in/api/users")
+    # print(resp)
+    return resp.json()
 
-    size = 5000
-    result = np.mean(np.random.rand(size, size) * np.random.rand(size, size))
-    app.logger.info(f"Dummy result: {result}")
-    return Response(str(result))
+
+@app.get("/users/<int:user_id>")
+def read_user(user_id: int):
+    resp = requests.get(f"https://reqres.in/api/users/{user_id}")
+
+    if resp.status_code != 200:
+        return
+
+    user = resp.json().get("data")
+    return {
+        "user_id": user.get("id", None),
+        "email": user.get("email", None),
+        "first_name": user.get("first_name", None),
+        "last_name": user.get("last_name", None),
+        "avatar": user.get("avatar", None),
+    }
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="8080")
+    app.run()
