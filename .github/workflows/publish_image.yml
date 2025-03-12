@@ -15,7 +15,7 @@ env:
   REGISTRY_USER: ${{ github.actor }}
   REGISTRY_PASSWORD: ${{ github.token }}
   IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-  IMAGE_TAG: ${{ startsWith(inputs.image_tag, 'v') || github.ref_name }}
+  IMAGE_TAG: ${{ startsWith(inputs.image_tag, 'v') && inputs.image_tag || github.ref_name }}
 
 jobs:
   build:
@@ -30,7 +30,9 @@ jobs:
           password: ${{ env.REGISTRY_PASSWORD }}
           registry: ${{ env.IMAGE_REGISTRY }}
 
-      - uses: actions/checkout@v4
+      # Checkout code
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       # Build image using Buildah action
       - name: Buildah Action
@@ -44,7 +46,7 @@ jobs:
 
       # Push the image to GHCR
       - name: Push to ghcr.io
-        uses: ./
+        uses: redhat-actions/push-to-registry@v2
         id: push-to-ghcr
         with:
           image: ${{ steps.build-image.outputs.image }}
