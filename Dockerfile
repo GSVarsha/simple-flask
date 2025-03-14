@@ -23,5 +23,8 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 EXPOSE 3000
 
+ENV INSTANA_DEBUG=True
+ENV INSTANA_SERVICE_NAME=simple-flask-pvital
+
 # Run the application
 CMD ["python", "app.py"]

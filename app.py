@@ -1,3 +1,4 @@
+import instana  # noqa: F401
 import requests
 from flask import Flask
 
