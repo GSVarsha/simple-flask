@@ -1,5 +1,6 @@
 import requests
 from flask import Flask
+from sys import version_info
 
 app = Flask(__name__)
 
@@ -8,6 +9,9 @@ app = Flask(__name__)
 def hello():
     return {"message": "Hello from Instana (profiling) World"}
 
+@app.get("/runtime_version")
+def get_runtime_version():
+    return {"runtime_version": f"{version_info[0]}.{version_info[1]}.{version_info[2]}"}
 
 @app.route("/users/")
 def read_users():
