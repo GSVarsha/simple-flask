@@ -1,7 +1,7 @@
-FROM python:3.12-slim-bookworm
+FROM public.ecr.aws/docker/library/python:3.9-slim-bookworm
 
-LABEL org.opencontainers.image.source=https://github.com/pvital/simple-flask
-LABEL org.opencontainers.image.description="Simple Flask container"
+LABEL org.opencontainers.image.source=https://github.com/GSVarsha/simple-flask
+LABEL org.opencontainers.image.description="Simple Flask container 3.9"
 LABEL org.opencontainers.image.licenses=MIT
 
 # Keeps Python from generating .pyc files in the container
@@ -9,6 +9,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED 1
+
+ENV INSTANA_DEBUG True
 
 # Install pip requirements
 ADD requirements.txt .
